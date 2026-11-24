@@ -1,0 +1,58 @@
+<div>
+  @if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  }
+  @if (loading()) {
+    <p class="text-muted">Loading...</p>
+  }
+
+  <h4 class="h5 mb-3">📖 Book requests</h4>
+  <table class="table table-striped align-middle mb-5">
+    <thead>
+      <tr><th>#</th><th>Book</th><th>Requested by</th><th>On</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      @if (bookReqs().length === 0) {
+        <tr><td colspan="5" class="text-center text-muted">No pending book requests.</td></tr>
+      } @else {
+        @for (r of bookReqs(); track r.id) {
+          <tr>
+            <td>{{ r.id }}</td>
+            <td>{{ r.bookTitle }}</td>
+            <td>{{ r.username }}</td>
+            <td>{{ r.requestedDate | date: 'mediumDate' }}</td>
+            <td>
+              <button class="btn btn-success btn-sm me-1" (click)="approveBook(r.id)">Approve</button>
+              <button class="btn btn-outline-danger btn-sm" (click)="declineBook(r.id)">Decline</button>
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+
+  <h4 class="h5 mb-3">⭐ Membership upgrade requests</h4>
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr><th>#</th><th>User</th><th>Amount</th><th>On</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      @if (memberReqs().length === 0) {
+        <tr><td colspan="5" class="text-center text-muted">No pending membership requests.</td></tr>
+      } @else {
+        @for (r of memberReqs(); track r.id) {
+          <tr>
+            <td>{{ r.id }}</td>
+            <td>{{ r.username }}</td>
+            <td>₹{{ r.amount }}</td>
+            <td>{{ r.requestedDate | date: 'mediumDate' }}</td>
+            <td>
+              <button class="btn btn-success btn-sm me-1" (click)="approveMember(r.id)">Approve</button>
+              <button class="btn btn-outline-danger btn-sm" (click)="declineMember(r.id)">Decline</button>
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>

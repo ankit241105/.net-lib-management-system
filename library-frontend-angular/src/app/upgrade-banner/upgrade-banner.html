@@ -1,0 +1,13 @@
+@if (pending()) {
+  <div class="alert alert-info">
+    ⏳ Your membership upgrade is <strong>pending admin approval</strong>. Once approved, log out and back in to borrow books.
+  </div>
+} @else {
+  <div class="alert alert-warning d-flex justify-content-between align-items-center flex-wrap">
+    <span>⭐ <strong>Become a Member for ₹199</strong> and start requesting books to borrow.</span>
+    <div class="d-flex align-items-center gap-2">
+      @if (error()) { <span class="text-danger small">{{ error() }}</span> }
+      <button class="btn btn-warning btn-sm" (click)="upgrade()">Upgrade for ₹199</button>
+    </div>
+  </div>
+}

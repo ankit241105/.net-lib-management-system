@@ -1,0 +1,113 @@
+<div>
+  @if (isAdmin()) {
+    <form class="row g-2 mb-4 p-3 bg-light rounded border" (ngSubmit)="addBook()">
+      <div class="col-12"><strong>Add a new book</strong></div>
+      <div class="col-md-5">
+        <input class="form-control" name="newTitle" placeholder="Title" [(ngModel)]="newTitle" required />
+      </div>
+      <div class="col-md-5">
+        <input class="form-control" name="newAuthor" placeholder="Author" [(ngModel)]="newAuthor" required />
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-success w-100" type="submit">Add</button>
+      </div>
+    </form>
+  }
+
+  <form class="row g-2 mb-3" (ngSubmit)="load()">
+    <div class="col-md-6">
+      <input class="form-control" name="search" placeholder="Search by title or author..."
+        [(ngModel)]="search" />
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" name="available" [(ngModel)]="available">
+        <option value="all">All books</option>
+        <option value="true">Available only</option>
+        <option value="false">Borrowed only</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <button class="btn btn-primary w-100" type="submit">Search</button>
+    </div>
+  </form>
+
+  @if (loading()) {
+    <p class="text-muted">Loading...</p>
+  }
+  @if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  }
+  @if (info()) {
+    <div class="alert alert-success">{{ info() }}</div>
+  }
+
+  @if (!loading()) {
+    <table class="table table-striped table-hover align-middle">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Status</th>
+          @if (isAdmin() || isMember()) { <th>Actions</th> }
+        </tr>
+      </thead>
+      <tbody>
+        @if (books().length === 0) {
+          <tr>
+            <td [attr.colspan]="(isAdmin() || isMember()) ? 5 : 4" class="text-center text-muted">No books found.</td>
+          </tr>
+        } @else {
+          @for (book of books(); track book.id) {
+            <tr>
+              <td>{{ book.id }}</td>
+
+              @if (editingId() === book.id) {
+                <td>
+                  <input class="form-control form-control-sm" [(ngModel)]="editTitle"
+                    [ngModelOptions]="{ standalone: true }" />
+                </td>
+                <td>
+                  <input class="form-control form-control-sm" [(ngModel)]="editAuthor"
+                    [ngModelOptions]="{ standalone: true }" />
+                </td>
+              } @else {
+                <td>{{ book.title }}</td>
+                <td>{{ book.author }}</td>
+              }
+
+              <td>
+                @if (book.isAvailable) {
+                  <span class="badge bg-success">Available</span>
+                } @else {
+                  <span class="badge bg-secondary">Borrowed</span>
+                }
+              </td>
+
+              @if (isAdmin() || isMember()) {
+                <td>
+                  @if (isAdmin()) {
+                    @if (editingId() === book.id) {
+                      <button class="btn btn-success btn-sm me-1" (click)="saveEdit(book)">Save</button>
+                      <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Cancel</button>
+                    } @else {
+                      <button class="btn btn-outline-primary btn-sm me-1" (click)="startEdit(book)">Edit</button>
+                      <button class="btn btn-outline-danger btn-sm" (click)="deleteBook(book.id)">Delete</button>
+                    }
+                  }
+                  @if (isMember()) {
+                    @if (book.isAvailable) {
+                      <button class="btn btn-outline-success btn-sm" (click)="requestBook(book)">Request</button>
+                    } @else {
+                      <span class="text-muted small">Unavailable</span>
+                    }
+                  }
+                </td>
+              }
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  }
+</div>

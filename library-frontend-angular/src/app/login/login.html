@@ -1,0 +1,22 @@
+<div class="container" style="max-width: 400px;">
+  <div class="card shadow-sm mt-5">
+    <div class="card-body">
+      <h3 class="card-title text-center text-primary mb-4">📚 Library Login</h3>
+      <form (ngSubmit)="submit()">
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input class="form-control" name="username" [(ngModel)]="username" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" name="password" [(ngModel)]="password" required />
+        </div>
+        @if (error()) {
+          <div class="alert alert-danger py-2">{{ error() }}</div>
+        }
+        <button type="submit" class="btn btn-primary w-100">Log in</button>
+        <a class="btn btn-link w-100 mt-2" routerLink="/register">New here? Create an account</a>
+      </form>
+    </div>
+  </div>
+</div>

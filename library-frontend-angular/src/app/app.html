@@ -1,0 +1,53 @@
+@if (isLoggedIn()) {
+  <div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-3">
+      <h1 class="h3 text-primary mb-0">📚 Library Management</h1>
+      <div>
+        <span class="me-3">
+          Signed in as <strong>{{ username() }}</strong>
+          @if (role()) {
+            <span class="badge ms-2"
+              [class.bg-warning]="isAdmin()" [class.text-dark]="isAdmin()"
+              [class.bg-success]="isMember()" [class.bg-secondary]="isUser()">
+              {{ role() }}
+            </span>
+          }
+        </span>
+        <button class="btn btn-outline-danger btn-sm" (click)="logout()">Logout</button>
+      </div>
+    </div>
+
+    @if (isUser()) {
+      <app-upgrade-banner />
+    }
+
+    <ul class="nav nav-pills mb-4">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/books" routerLinkActive="active">Books</a>
+      </li>
+      @if (isAdmin()) {
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/borrowing" routerLinkActive="active">Loans</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/approvals" routerLinkActive="active">Approvals</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/create-admin" routerLinkActive="active">Create Admin</a>
+        </li>
+      }
+      @if (isMember()) {
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/borrowing" routerLinkActive="active">My Books</a>
+        </li>
+      }
+    </ul>
+
+    <router-outlet />
+  </div>
+} @else {
+  <router-outlet />
+}

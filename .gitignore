@@ -1,0 +1,25 @@
+# ---------- .NET ----------
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+.vs/
+
+# ---------- Node / React (Vite) ----------
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# ---------- Angular ----------
+.angular/
+
+# ---------- Secrets: DO NOT COMMIT ----------
+# These hold the SQL connection string + JWT signing key.
+appsettings.json
+appsettings.Development.json
+
+# ---------- Misc ----------
+*.log
+.DS_Store
+Thumbs.db

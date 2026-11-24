@@ -1,0 +1,33 @@
+<div class="container" style="max-width: 400px;">
+  <div class="card shadow-sm mt-5">
+    <div class="card-body">
+      <h3 class="card-title text-center text-primary mb-4">📚 Create account</h3>
+
+      @if (done()) {
+        <div class="alert alert-success">Account created! You can now log in.</div>
+        <a class="btn btn-primary w-100" routerLink="/login">Go to login</a>
+      } @else {
+        <form (ngSubmit)="submit()">
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input class="form-control" name="username" [(ngModel)]="username" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" [(ngModel)]="email" required />
+            <div class="form-text">Used for due-date reminder emails.</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" name="password" [(ngModel)]="password" required />
+          </div>
+          @if (error()) {
+            <div class="alert alert-danger py-2">{{ error() }}</div>
+          }
+          <button type="submit" class="btn btn-primary w-100">Create account</button>
+          <a class="btn btn-link w-100 mt-2" routerLink="/login">Already have an account? Log in</a>
+        </form>
+      }
+    </div>
+  </div>
+</div>

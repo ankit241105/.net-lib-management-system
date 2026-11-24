@@ -1,0 +1,90 @@
+<div>
+  @if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  }
+  @if (loading()) {
+    <p class="text-muted">Loading...</p>
+  }
+
+  <!-- Member: their book requests -->
+  @if (!isAdmin() && !loading()) {
+    <h4 class="h5 mb-3">My requests</h4>
+    <table class="table table-striped align-middle mb-5">
+      <thead>
+        <tr><th>#</th><th>Book</th><th>Status</th><th>Requested</th></tr>
+      </thead>
+      <tbody>
+        @if (myRequests().length === 0) {
+          <tr><td colspan="4" class="text-center text-muted">No requests yet. Request a book from the Books tab.</td></tr>
+        } @else {
+          @for (r of myRequests(); track r.id) {
+            <tr>
+              <td>{{ r.id }}</td>
+              <td>{{ r.bookTitle }}</td>
+              <td><span class="badge {{ badgeClass(r.status) }}">{{ r.status }}</span></td>
+              <td>{{ r.requestedDate | date: 'mediumDate' }}</td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  }
+
+  @if (!loading()) {
+    <h4 class="h5 mb-3">{{ isAdmin() ? 'All loans' : 'My borrowed books' }}</h4>
+    <table class="table table-striped table-hover align-middle">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Book</th>
+          @if (isAdmin()) { <th>Borrower</th> }
+          <th>Borrowed On</th>
+          <th>Due</th>
+          <th>Status</th>
+          <th>Fine</th>
+          @if (isAdmin()) { <th>Action</th> }
+        </tr>
+      </thead>
+      <tbody>
+        @if (records().length === 0) {
+          <tr>
+            <td [attr.colspan]="isAdmin() ? 8 : 6" class="text-center text-muted">No borrow records yet.</td>
+          </tr>
+        } @else {
+          @for (r of records(); track r.id) {
+            <tr>
+              <td>{{ r.id }}</td>
+              <td>{{ r.book ? r.book.title : '(deleted)' }}</td>
+              @if (isAdmin()) { <td>{{ r.username || '(unknown)' }}</td> }
+              <td>{{ r.borrowDate | date: 'mediumDate' }}</td>
+              <td>{{ r.dueDate | date: 'mediumDate' }}</td>
+              <td>
+                @if (r.returnDate) {
+                  <span class="badge bg-secondary">Returned {{ r.returnDate | date: 'mediumDate' }}</span>
+                } @else if (isOverdue(r)) {
+                  <span class="badge bg-danger">Overdue</span>
+                } @else {
+                  <span class="badge bg-warning text-dark">Borrowed</span>
+                }
+              </td>
+              <td>
+                @if (r.fine > 0) {
+                  <span class="text-danger fw-bold">₹{{ r.fine }}</span>
+                } @else {
+                  <span class="text-muted">—</span>
+                }
+              </td>
+              @if (isAdmin()) {
+                <td>
+                  @if (!r.returnDate) {
+                    <button class="btn btn-outline-primary btn-sm" (click)="returnBook(r.id)">Return</button>
+                  }
+                </td>
+              }
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  }
+</div>
